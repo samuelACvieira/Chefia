@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../database/database_helper.dart';
+import 'apr1.dart';
 
 class CadastroInstituicao extends StatefulWidget {
   const CadastroInstituicao({super.key});
@@ -9,7 +11,6 @@ class CadastroInstituicao extends StatefulWidget {
 
 class _CadastroInstituicaoState extends State<CadastroInstituicao> {
   final nomeInstController = TextEditingController();
-  final tipoController = TextEditingController();
   final responsavelController = TextEditingController();
   final cargoController = TextEditingController();
   final emailController = TextEditingController();
@@ -17,6 +18,32 @@ class _CadastroInstituicaoState extends State<CadastroInstituicao> {
 
   final List<String> tipos = ['ONG', 'Escola', 'Abrigo', 'Empresa', 'Outra'];
   String tipoSelecionado = 'Escola';
+
+  InputDecoration _inputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(25),
+        borderSide: BorderSide.none,
+      ),
+    );
+  }
+
+  Widget _label(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Color(0xFFB55400),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +80,6 @@ class _CadastroInstituicaoState extends State<CadastroInstituicao> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    const SizedBox(height: 10),
                     const Center(
                       child: Text(
                         "Cadastro Instituição",
@@ -64,156 +90,137 @@ class _CadastroInstituicaoState extends State<CadastroInstituicao> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 20),
 
-                    const Text(
-                      "Nome da Instituição",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFB55400),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
+                    _label("Nome da Instituição"),
                     TextField(
                       controller: nomeInstController,
-                      decoration: InputDecoration(
-                        hintText: "Digite o nome",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      decoration: _inputDecoration("Digite o nome"),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    _label("Tipo da Instituição"),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: DropdownButton<String>(
+                        value: tipoSelecionado,
+                        isExpanded: true,
+                        underline: const SizedBox(),
+                        items: tipos.map((tipo) {
+                          return DropdownMenuItem(
+                            value: tipo,
+                            child: Text(tipo),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            tipoSelecionado = value!;
+                          });
+                        },
                       ),
                     ),
 
                     const SizedBox(height: 15),
-                    const Text(
-                      "Tipo da Instituição",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFB55400),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    DropdownButtonFormField<String>(
-                      value: tipoSelecionado,
-                      items: tipos.map((tipo) => DropdownMenuItem(
-                        value: tipo,
-                        child: Text(tipo),
-                      )).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          tipoSelecionado = value!;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
-                    ),
 
-                    const SizedBox(height: 15),
-                    const Text(
-                      "Contato Principal",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFB55400),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-
+                    _label("Responsável"),
                     TextField(
                       controller: responsavelController,
-                      decoration: InputDecoration(
-                        hintText: "Nome do responsável",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
+                      decoration: _inputDecoration("Nome do responsável"),
                     ),
-                    const SizedBox(height: 12),
 
+                    const SizedBox(height: 10),
+
+                    _label("Cargo"),
                     TextField(
                       controller: cargoController,
-                      decoration: InputDecoration(
-                        hintText: "Cargo/função",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
+                      decoration: _inputDecoration("Cargo/função"),
                     ),
-                    const SizedBox(height: 12),
 
+                    const SizedBox(height: 10),
+
+                    _label("E-mail"),
                     TextField(
                       controller: emailController,
-                      decoration: InputDecoration(
-                        hintText: "E-mail",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
+                      decoration: _inputDecoration("E-mail"),
                     ),
-                    const SizedBox(height: 12),
 
+                    const SizedBox(height: 10),
+
+                    _label("Telefone"),
                     TextField(
                       controller: telefoneController,
-                      decoration: InputDecoration(
-                        hintText: "Telefone",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
+                      decoration: _inputDecoration("Telefone"),
                     ),
 
                     const SizedBox(height: 25),
+
                     SizedBox(
                       width: double.infinity,
                       height: 55,
                       child: ElevatedButton(
-                        onPressed: () {
-                          // Salvar dados da instituição
-                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB55400),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
+                        onPressed: () async {
+  try {
+    await DatabaseHelper.instance.inserirInstituicao({
+      'nome': nomeInstController.text,
+      'tipo': tipoSelecionado,
+      'responsavel': responsavelController.text,
+      'cargo': cargoController.text,
+      'email': emailController.text,
+      'telefone': telefoneController.text,
+    });
+
+    // 🔥 DEBUG DO BANCO (volta a funcionar)
+    final dados = await DatabaseHelper.instance.listarInstituicoes();
+    print("📦 DADOS DO BANCO:");
+    print(dados);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Instituição cadastrada com sucesso!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const OnboardingScreen(),
+      ),
+    );
+
+  } catch (e) {
+    print("❌ ERRO NO CADASTRO: $e");
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Erro: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+},
                         child: const Text(
                           "Cadastrar Instituição",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),

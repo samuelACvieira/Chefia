@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'tela_cadastro.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_textfield.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
