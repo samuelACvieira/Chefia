@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'tela_entrada.dart';
+import 'tela_estoque.dart';
+import 'tela_receitas.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,12 +17,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const _DashboardHome(),
     const _PlaceholderPage(titulo: "Estoque"),
     const _PlaceholderPage(titulo: "Relatórios"),
+    const TelaReceitas(), // novo
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDCFA1),
+      backgroundColor: const Color(0xFFF6D1BA),
 
       body: pages[currentIndex],
 
@@ -30,30 +34,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
             currentIndex = index;
           });
         },
-        selectedItemColor: const Color(0xFFB55400),
+        selectedItemColor: const Color(0xFFFF7900),
         unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF5F5F5),
+        elevation: 8,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: "Início",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.inventory),
-            label: "Estoque",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: "Relatórios",
-          ),
-        ],
+    BottomNavigationBarItem(
+      icon: Icon(Icons.dashboard),
+      label: "Início",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.inventory),
+      label: "Estoque",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.bar_chart),
+      label: "Relatórios",
+    ),
+    BottomNavigationBarItem(   // 👈 NOVO
+      icon: Icon(Icons.restaurant_menu),
+      label: "Receitas",
+    ),
+  ],
       ),
     );
   }
 }
 
 // =====================
-// 👇 SEU DASHBOARD ORIGINAL (SEM MUDAR NADA)
+// DASHBOARD HOME
 // =====================
 
 class _DashboardHome extends StatelessWidget {
@@ -62,16 +71,18 @@ class _DashboardHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDCFA1),
+      backgroundColor: const Color(0xFFF6D1BA),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFFB55400),
+        backgroundColor: const Color(0xFFF6D1BA),
         elevation: 0,
+        centerTitle: true,
         title: const Text(
           "ChefIA",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            fontSize: 26,
+            color: Color(0xFFC46000),
           ),
         ),
       ),
@@ -87,7 +98,7 @@ class _DashboardHome extends StatelessWidget {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFB55400),
+                color: Color(0xFFC46000),
               ),
             ),
 
@@ -105,9 +116,21 @@ class _DashboardHome extends StatelessWidget {
 
             Row(
               children: [
-                Expanded(child: _buildCard("Estoque", "156 itens", Icons.inventory_2)),
+                Expanded(
+                  child: _buildCard(
+                    "Estoque",
+                    "156 itens",
+                    Icons.inventory_2,
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: _buildCard("Alunos", "480", Icons.school)),
+                Expanded(
+                  child: _buildCard(
+                    "Alunos",
+                    "480",
+                    Icons.school,
+                  ),
+                ),
               ],
             ),
 
@@ -115,9 +138,21 @@ class _DashboardHome extends StatelessWidget {
 
             Row(
               children: [
-                Expanded(child: _buildCard("Economia", "32 kg", Icons.recycling)),
+                Expanded(
+                  child: _buildCard(
+                    "Economia",
+                    "32 kg",
+                    Icons.recycling,
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: _buildCard("Alertas", "5", Icons.warning_amber_rounded)),
+                Expanded(
+                  child: _buildCard(
+                    "Alertas",
+                    "5",
+                    Icons.warning_amber_rounded,
+                  ),
+                ),
               ],
             ),
 
@@ -128,19 +163,55 @@ class _DashboardHome extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFB55400),
+                color: Color(0xFFC46000),
               ),
             ),
 
             const SizedBox(height: 15),
 
-            _actionButton(icon: Icons.add_box, title: "Registrar Entrada", onTap: () {}),
+            _actionButton(
+              icon: Icons.add_box,
+              title: "Registrar Entrada",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const TelaEntrada(),
+                  ),
+                );
+              },
+            ),
+
             const SizedBox(height: 12),
-            _actionButton(icon: Icons.restaurant, title: "Registrar Consumo", onTap: () {}),
+
+            _actionButton(
+              icon: Icons.restaurant,
+              title: "Registrar Consumo",
+              onTap: () {},
+            ),
+
             const SizedBox(height: 12),
-            _actionButton(icon: Icons.inventory, title: "Ver Estoque", onTap: () {}),
+
+            _actionButton(
+              icon: Icons.inventory,
+              title: "Ver Estoque",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const TelaEstoque(),
+                  ),
+                );
+              },
+            ),
+
             const SizedBox(height: 12),
-            _actionButton(icon: Icons.smart_toy, title: "Sugestão ChefIA", onTap: () {}),
+
+            _actionButton(
+              icon: Icons.smart_toy,
+              title: "Sugestão ChefIA",
+              onTap: () {},
+            ),
 
             const SizedBox(height: 30),
 
@@ -149,44 +220,81 @@ class _DashboardHome extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFB55400),
+                color: Color(0xFFC46000),
               ),
             ),
 
             const SizedBox(height: 15),
 
-            _alertCard("Leite vence amanhã", Icons.warning),
+            _alertCard(
+              "Leite vence amanhã",
+              Icons.warning,
+            ),
+
             const SizedBox(height: 10),
-            _alertCard("Bananas vencem em 2 dias", Icons.warning),
+
+            _alertCard(
+              "Bananas vencem em 2 dias",
+              Icons.warning,
+            ),
+
             const SizedBox(height: 10),
-            _alertCard("Estoque de arroz abaixo do ideal", Icons.inventory),
+
+            _alertCard(
+              "Estoque de arroz abaixo do ideal",
+              Icons.inventory,
+            ),
           ],
         ),
       ),
     );
   }
 
-  static Widget _buildCard(String titulo, String valor, IconData icon) {
+  static Widget _buildCard(
+    String titulo,
+    String valor,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       height: 120,
       decoration: BoxDecoration(
-        color: const Color(0xFFFBE2C4),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFB55400), width: 2),
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: const Color(0xFFB55400), size: 30),
+          Icon(
+            icon,
+            color: const Color(0xFFC46000),
+            size: 34,
+          ),
+
           const SizedBox(height: 8),
-          Text(valor,
-              style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFB55400))),
-          Text(titulo,
-              style: const TextStyle(color: Color(0xFFB55400))),
+
+          Text(
+            valor,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFC46000),
+            ),
+          ),
+
+          Text(
+            titulo,
+            style: const TextStyle(
+              color: Color(0xFFC46000),
+            ),
+          ),
         ],
       ),
     );
@@ -199,34 +307,50 @@ class _DashboardHome extends StatelessWidget {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 60,
+      height: 58,
       child: ElevatedButton.icon(
         onPressed: onTap,
         icon: Icon(icon),
         label: Text(title),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFB55400),
+          elevation: 3,
+          backgroundColor: const Color(0xFFFF7900),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
     );
   }
 
-  static Widget _alertCard(String texto, IconData icon) {
+  static Widget _alertCard(
+    String texto,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: const Color(0xFFFBE2C4),
-        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.orange),
+          Icon(
+            icon,
+            color: Color(0xFFFF7900),
+          ),
           const SizedBox(width: 10),
-          Expanded(child: Text(texto)),
+          Expanded(
+            child: Text(texto),
+          ),
         ],
       ),
     );
@@ -234,13 +358,15 @@ class _DashboardHome extends StatelessWidget {
 }
 
 // =====================
-// 👇 TABS DA BOTTOM BAR
+// TABS
 // =====================
 
 class _PlaceholderPage extends StatelessWidget {
   final String titulo;
 
-  const _PlaceholderPage({required this.titulo});
+  const _PlaceholderPage({
+    required this.titulo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +376,7 @@ class _PlaceholderPage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFB55400),
+          color: Color(0xFFC46000),
         ),
       ),
     );

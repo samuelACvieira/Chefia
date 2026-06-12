@@ -47,48 +47,76 @@ class DatabaseHelper {
         telefone TEXT
       )
     ''');
+
+    // ==========================
+    // TABELA ESTOQUE
+    // ==========================
+    await db.execute('''
+      CREATE TABLE estoque (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        quantidade TEXT NOT NULL,
+        tipo TEXT,
+        validade TEXT
+      )
+    ''');
   }
 
   // ==========================
-  // INSERIR USUÁRIO
+  // USUÁRIOS
   // ==========================
   Future<int> inserirUsuario(Map<String, dynamic> usuario) async {
     final db = await database;
-
-    return await db.insert(
-      'usuarios',
-      usuario,
-    );
+    return await db.insert('usuarios', usuario);
   }
 
-  // ==========================
-  // INSERIR INSTITUIÇÃO
-  // ==========================
-  Future<int> inserirInstituicao(
-      Map<String, dynamic> instituicao) async {
+  Future<List<Map<String, dynamic>>> listarUsuarios() async {
     final db = await database;
-
-    return await db.insert(
-      'instituicoes',
-      instituicao,
-    );
+    return await db.query('usuarios');
   }
 
+  Future<int> deletarItemEstoque(int id) async {
+  final db = await database;
+  return await db.delete(
+    'estoque',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
+Future<int> atualizarItemEstoque(Map<String, dynamic> item) async {
+  final db = await database;
+  return await db.update(
+    'estoque',
+    item,
+    where: 'id = ?',
+    whereArgs: [item['id']],
+  );
+}
+
   // ==========================
-  // LISTAR INSTITUIÇÕES
+  // INSTITUIÇÕES
   // ==========================
+  Future<int> inserirInstituicao(Map<String, dynamic> instituicao) async {
+    final db = await database;
+    return await db.insert('instituicoes', instituicao);
+  }
+
   Future<List<Map<String, dynamic>>> listarInstituicoes() async {
     final db = await database;
-
     return await db.query('instituicoes');
   }
 
   // ==========================
-  // LISTAR USUÁRIOS
+  // 🧠 ESTOQUE (PADRONIZADO)
   // ==========================
-  Future<List<Map<String, dynamic>>> listarUsuarios() async {
-    final db = await database;
 
-    return await db.query('usuarios');
+  Future<int> inserirItemEstoque(Map<String, dynamic> item) async {
+    final db = await database;
+    return await db.insert('estoque', item);
+  }
+
+  Future<List<Map<String, dynamic>>> listarEstoque() async {
+    final db = await database;
+    return await db.query('estoque', orderBy: 'id DESC');
   }
 }
